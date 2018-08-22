@@ -2,54 +2,34 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
+import CourseList from './courseList';
+import {browserHistory} from 'react-router';
 
 class CoursesPage extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
-        this.state = {
-            course: { title: "" }
-        };
-
-        this.onTitleChange = this.onTitleChange.bind(this);
-        this.onClickSave = this.onClickSave.bind(this);
-        //you can also fix this bind function by using
-        //  onChange = {this.onTitleChange} /> down in the input field
-        // however this can cause performance issues because calling bind in a render beecause will
-        // create a new function on render
-    }
-
-    onTitleChange(event) {
-        const course = this.state.course;
-        course.title = event.target.value;
-        this.setState({course: course});
-    }
-
-    onClickSave() {
-        //this line below is necessary if you do not include mapDispatchToProps as we have at the bottom of this file
-        //this.props.dispatch(courseActions.createCourse(this.state.course));
-        //since we have included mapDispatchToProps, we can use
-        this.props.actions.createCourse(this.state.course);
+        this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
     }
 
     courseRow(course, index) {
         return <div key={index}>{course.title}</div>;
+    }   
+
+    redirectToAddCoursePage() {
+        browserHistory.push('/course');
     }
-    
 
     render() {
+       // debugger;
+        const {courses} = this.props;
         return (
             <div>
                 <h1>Courses</h1>
-                {this.props.courses.map(this.courseRow)}
-                <h2>Add Course</h2>
-                <input 
-                    type = "text"
-                    onChange = {this.onTitleChange} />
-                <input 
-                    type = "submit"
-                    value= "save"
-                    onClick = {this.onClickSave} />
+                <input type="submit"
+                    value="Add Course"
+                    className="btn btn-primary"
+                    onClick={this.redirectToAddCoursePage}/>
+                <CourseList courses = {courses} />                                
             </div>
         );
     }
